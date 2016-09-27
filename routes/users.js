@@ -1,17 +1,20 @@
 const router = require('express').Router(),
       // To deal w/ file uploads
       multer = require('multer'),
-      upload = multer({dest: './uploads'});
+      upload = multer({dest: './uploads'}),
+      User = require('mongoose').model('User');
 
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  User.find()
+  .then( (users) => res.json(users) )
 });
 
 router.get('/register', function(req, res, next) {
   res.render('register', { title: "Register" });
 });
+
 router.post('/register', upload.single('profile_image'), function(req, res, next) {
   const { name, email, username, password, password_confirm } = req.body;
   const profileImage = ( req.file ) ? req.file.filename : 'noimage.jpg';
@@ -22,8 +25,21 @@ router.post('/register', upload.single('profile_image'), function(req, res, next
   if (errors) {
     res.render('register', { errors })
   } else {
-    console.log('no errors')
+    const newUser = {
+      name,
+      email,
+      username,
+      password,
+      profileImage
+    }
+    User.create(newUser)
+    .then( (newUser) => {
+      req.flash('success flash', 'Successful registration!')
+      res.redirect('/')
+    })
+    .catch( (error) => { throw error })
   }
+
 });
 
 router.get('/login', function(req, res, next) {

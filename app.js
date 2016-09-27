@@ -10,10 +10,13 @@ const express = require('express'),
       localStrategy = require('passport-local').Strategy,
       multer = require('multer'),
       upload = multer({dest: './uploads'}),
-      flash = require('connect-flash'),
-      mongo = require('mongodb'),
-      mongoose = require('mongoose'),
-      db = mongoose.connection;
+      flash = require('connect-flash');
+      // mongo = require('mongodb'),
+      // mongoose = require('mongoose'),
+      // db = mongoose.connection;
+
+// initializes mongo connection and user model
+require('./models/user')
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
