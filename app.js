@@ -6,7 +6,6 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       session = require('express-session'),
       passport = require('passport'),
-      expressValidator = require('express-validator'),
       localStrategy = require('passport-local').Strategy,
       multer = require('multer'),
       upload = multer({dest: './uploads'}),
@@ -15,16 +14,17 @@ const express = require('express'),
       // mongoose = require('mongoose'),
       // db = mongoose.connection;
 
-// initializes mongo connection and user model
-require('./models/user')
+// Initializes mongo connection and user model
+require('./server/models/user')
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+// Pulls in routers
+var routes = require('./server/routes/index');
+var users = require('./server/routes/users');
 
 var app = express();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
+// View engine setup
+app.set('views', path.join(__dirname, 'client/views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
@@ -33,7 +33,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client/public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
 
 // Handle sessions
@@ -47,25 +47,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Validator
-// https://github.com/ctavan/express-validator
-// In this example, the formParam value is going to get morphed into form body format useful for printing.
-app.use(expressValidator({
-  errorFormatter: function(param, msg, value) {
-      var namespace = param.split('.')
-      , root    = namespace.shift()
-      , formParam = root;
 
-    while(namespace.length) {
-      formParam += '[' + namespace.shift() + ']';
-    }
-    return {
-      param : formParam,
-      msg   : msg,
-      value : value
-    };
-  }
-}));
+// Validation setup
+require('./server/util/validator')(app);
 
 // Express messages
 app.use(require('connect-flash')());
@@ -107,6 +91,5 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
 
 module.exports = app;
