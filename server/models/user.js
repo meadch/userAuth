@@ -48,6 +48,7 @@ module.exports = (function() {
           password: req.body.password,
           profileImage
         }
+        // Hash password before saving to database
         bcrypt.genSalt(10, function(err, salt) {
             bcrypt.hash(newUser.password, salt, function(err, hash) {
                 newUser.password = hash;
@@ -84,5 +85,28 @@ module.exports = (function() {
             });
     }
 
+    UserController.login = (req, res) => {
+      req.flash("success flash", "You're now logged in.");
+      res.redirect('/');
+    }
+
+    UserController.getUserByUsername = (username) => {
+      return User.findOne({ username })
+    }
+
+    UserController.getUserById = (id) => {
+      return User.findById(id)
+    }
+
+    UserController.comparePassword = (password, hash) => {
+      return new Promise( (resolve, reject) => {
+        bcrypt.compare(password, hash, (err, isMatch) => {
+          if (err) { reject(err); }
+          else {
+            resolve(isMatch);
+          }
+        });
+      })
+    }
     return UserController;
 }());

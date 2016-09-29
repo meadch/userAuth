@@ -6,7 +6,6 @@ const express = require('express'),
       bodyParser = require('body-parser'),
       session = require('express-session'),
       passport = require('passport'),
-      localStrategy = require('passport-local').Strategy,
       multer = require('multer'),
       upload = multer({dest: './uploads'}),
       flash = require('connect-flash');
@@ -40,9 +39,6 @@ app.use(session({
   resave: true
 }));
 
-// Passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
 
 
 // Validation setup
@@ -57,6 +53,9 @@ app.use(function (req, res, next) {
 
 app.use('/', routes);
 app.use('/users', users);
+
+// Passport configuration
+require('./server/util/authentication')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
