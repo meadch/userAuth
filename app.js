@@ -10,9 +10,6 @@ const express = require('express'),
       multer = require('multer'),
       upload = multer({dest: './uploads'}),
       flash = require('connect-flash');
-      // mongo = require('mongodb'),
-      // mongoose = require('mongoose'),
-      // db = mongoose.connection;
 
 // Initializes mongo connection and user model
 require('./server/models/user')

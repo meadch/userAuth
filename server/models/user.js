@@ -40,9 +40,22 @@ module.exports = (function() {
     }
 
     UserController.create = (req, res) => {
-        bcrypt.genSalt(saltRounds, function(err, salt) {
-            bcrypt.hash(myPlaintextPassword, salt, function(err, hash) {
-                // Store hash in your password DB.
+        const profileImage = (req.file) ? req.file.filename : "noimage.jpg";
+        const newUser = {
+          name: req.body.name,
+          email: req.body.email,
+          username: req.body.username,
+          password: req.body.password,
+          profileImage
+        }
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(newUser.password, salt, function(err, hash) {
+                newUser.password = hash;
+                User.create(newUser)
+                .then( (createdUser) => {
+                  req.flash('success flash', "Successfully registered! Please login.");
+                  res.redirect('/');
+                })
             });
         });
     }
@@ -64,9 +77,7 @@ module.exports = (function() {
                 UserController.create(req, res);
             })
             .catch((errors) => {
-                errors.forEach(({
-                    msg
-                }) => {
+                errors.forEach(({msg}) => {
                     req.flash('error flash', msg);
                 })
                 res.redirect('/users/register');
