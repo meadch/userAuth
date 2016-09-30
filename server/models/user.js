@@ -85,23 +85,25 @@ module.exports = (function() {
             });
     }
 
-    UserController.login = (req, res) => {
+    UserController.login = (req, res, done) => {
       req.flash("success flash", "You're now logged in.");
       res.redirect('/');
     }
 
     UserController.getUserByUsername = (username) => {
-      return User.findOne({ username })
+      return User.findOne({ username });
     }
 
     UserController.getUserById = (id) => {
       return User.findById(id)
     }
 
-    UserController.comparePassword = (password, hash) => {
+    UserController.comparePassword = (password, hash, cb) => {
       return new Promise( (resolve, reject) => {
         bcrypt.compare(password, hash, (err, isMatch) => {
-          if (err) { reject(err); }
+          if (err) {
+            reject(err);
+          }
           else {
             resolve(isMatch);
           }

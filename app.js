@@ -26,11 +26,11 @@ app.set('view engine', 'jade');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'client/public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // Handle sessions
 app.use(session({
@@ -39,23 +39,27 @@ app.use(session({
   resave: true
 }));
 
-
+// Passport configuration
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Validation setup
 require('./server/util/validator')(app);
 
+app.use(cookieParser());
+
 // Express messages
 app.use(require('connect-flash')());
+
 app.use(function (req, res, next) {
   res.locals.messages = require('express-messages')(req, res);
   next();
 });
 
+
 app.use('/', routes);
 app.use('/users', users);
 
-// Passport configuration
-require('./server/util/authentication')(app);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
