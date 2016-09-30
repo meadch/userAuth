@@ -16,11 +16,12 @@ html(lang='en')
           a.navbar-brand(href='#') User Authorization
         .navbar-collapse.collapse
           ul.nav.navbar-nav
-            li(class=(title == 'Register' ? 'active' : ''))
-              a(href='/users/register') Register
-            li(class=(title == 'Login' ? 'active' : ''))
-              a(href='/users/login') Login
-          if title == "Members"
+            if !user
+              li(class=(title == 'Register' ? 'active' : ''))
+                a(href='/users/register') Register
+              li(class=(title == 'Login' ? 'active' : ''))
+                a(href='/users/login') Login
+          if user
             ul.nav.navbar-nav.navbar-right
              li
               a(href='/users/logout') Logout
