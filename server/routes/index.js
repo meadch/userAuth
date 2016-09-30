@@ -2,15 +2,16 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  console.log('index rendering')
+router.get('/', ensureAuthenticated, function(req, res, next) {
   res.render('index', { title: 'Members' });
 });
 
-
-router.get('/happy', function(req, res, next) {
-  console.log('here')
-  res.render('index', { title: 'Members' });
-});
+function ensureAuthenticated(req, res, next){
+  if (req.isAuthenticated()){
+    return next();
+  }
+  req.flash('error', "Please login")
+  res.redirect('/users/login');
+}
 
 module.exports = router;

@@ -17,25 +17,29 @@ router.get('/register', function(req, res) {
 
 router.post('/register', upload.single('profile_image'), UserController.validateRegistration);
 
-router.get('/login', function(req, res, next) {
-  res.render('login', {
-    title: "Login"
-  });
+router.get('/login', function(req, res) {
+  if (req.isAuthenticated()) {
+    res.redirect('/')
+  } else {
+    res.render('login', {
+      title: "Login"
+    });
+  }
 });
 
 router.post(
             '/login',
             passport.authenticate('local',{failureRedirect:'/users/login', failureFlash: 'Invalid username or password'}),
             function(req, res){
-              req.flash('success', "logged in")
+              req.flash('success', "You are now logged in!")
               res.redirect('/')
             }
           );
 
 router.get('/logout', (req, res) => {
   req.logout();
-  req.flash('success', "You're logged out!")
-  res.redirect('/users/login')
+  req.flash('success', "You're logged out!");
+  res.redirect('/users/login');
 })
 
 passport.serializeUser(function(user, done) {
