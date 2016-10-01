@@ -9,7 +9,11 @@ import logger from 'morgan';
 // Initializes mongo connection
 import './config/db'
 // Pulls in routers
-import usersRouter from './routes/users'
+import {
+  mainRouter,
+  usersRouter
+} from './routes'
+
 const app = express();
 
 var routes = require('./routes');
@@ -56,7 +60,7 @@ app.get('*', (req, res, next) => {
   next();
 });
 
-app.use('/', routes);
+app.use('/', mainRouter);
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
