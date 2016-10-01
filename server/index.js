@@ -1,33 +1,28 @@
-const express = require('express'),
-      path = require('path'),
-      favicon = require('serve-favicon'),
-      logger = require('morgan'),
-      cookieParser = require('cookie-parser'),
-      bodyParser = require('body-parser'),
-      session = require('express-session'),
-      passport = require('passport'),
-      multer = require('multer'),
-      upload = multer({dest: './uploads'}),
-      flash = require('connect-flash');
-
-// Initializes mongo connection and user model
-require('./server/models/user')
-
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import session from 'express-session';
+import passport from 'passport';
+import flash from 'connect-flash';
+import logger from 'morgan';
+// Initializes mongo connection
+import './config/db'
 // Pulls in routers
-var routes = require('./server/routes/index');
-var users = require('./server/routes/users');
+import usersRouter from './routes/users'
+const app = express();
 
-var app = express();
+var routes = require('./routes');
 
 // View engine setup
-app.set('views', path.join(__dirname, 'client/views'));
+app.set('views', path.join(__dirname, '../client/views'));
 app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'client/public')));
-app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, '../client/public')));
+app.use(express.static(path.join(__dirname, '../bower_components')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -44,7 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Validation setup
-require('./server/util/validator')(app);
+require('./util/validator')(app);
 
 app.use(cookieParser());
 
@@ -62,7 +57,7 @@ app.get('*', (req, res, next) => {
 });
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -95,4 +90,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-module.exports = app;
+app.listen(3000, ()=>{
+  console.log('Running on 3000');
+})

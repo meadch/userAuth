@@ -1,46 +1,32 @@
-const router = require('express').Router(),
-      // To deal w/ file uploads
-      multer = require('multer'),
+import { Router } from 'express';
+import passport from 'passport';
+import { Strategy } from 'passport-local'
+import multer from 'multer';
+import {
+  UserController
+} from '../controllers';
+
+const usersRouter = Router(),
       upload = multer({
           dest: './uploads'
-      }),
-      UserController = require('../models/user'),
-      passport = require('passport'),
-      LocalStrategy = require('passport-local').Strategy;
+      });
 
-/* GET users listing. */
-router.get('/', UserController.index );
+usersRouter.route('/')
+  .get(UserController.index);
 
-router.get('/register', function(req, res) {
-  res.render('register', { title: "Register" });
-});
+usersRouter.route('/register')
+  .get(UserController.register)
+  .post(upload.single('profile_image'), UserController.validateRegistration)
 
-router.post('/register', upload.single('profile_image'), UserController.validateRegistration);
+usersRouter.route('/login')
+  .get(UserController.login)
+  .post(
+    passport.authenticate('local',{failureRedirect:'/users/login', failureFlash: 'Invalid username or password'}), UserController.login
+  )
 
-router.get('/login', function(req, res) {
-  if (req.isAuthenticated()) {
-    res.redirect('/')
-  } else {
-    res.render('login', {
-      title: "Login"
-    });
-  }
-});
+usersRouter.route('/logout')
+  .get(UserController.logout)
 
-router.post(
-            '/login',
-            passport.authenticate('local',{failureRedirect:'/users/login', failureFlash: 'Invalid username or password'}),
-            function(req, res){
-              req.flash('success', "You are now logged in!")
-              res.redirect('/')
-            }
-          );
-
-router.get('/logout', (req, res) => {
-  req.logout();
-  req.flash('success', "You're logged out!");
-  res.redirect('/users/login');
-})
 
 passport.serializeUser(function(user, done) {
 	done(null, user.id);
@@ -57,7 +43,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 
-passport.use(new LocalStrategy((username, password, done) => {
+passport.use(new Strategy((username, password, done) => {
     UserController.getUserByUsername(username)
         .then((user) => {
             if (!user) {
@@ -81,4 +67,4 @@ passport.use(new LocalStrategy((username, password, done) => {
         })
 }));
 
-module.exports = router;
+export default usersRouter
