@@ -14,7 +14,8 @@ import {
   usersRouter
 } from './routes'
 
-const app = express();
+const app = express(),
+      PORT = 8000;
 
 var routes = require('./routes');
 
@@ -94,6 +95,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(3000, ()=>{
-  console.log('Running on 3000');
+app.listen(PORT, ()=>{
+  console.log(`Running on ${PORT}`);
 })

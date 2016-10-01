@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "start": "node ./lib",
     "watch": "nodemon ./lib",
+    "build": "babel --presets es2015,stage-0 server -d lib",
     "dev": "babel --presets es2015,stage-0 server -d lib --watch"
   },
   "dependencies": {
