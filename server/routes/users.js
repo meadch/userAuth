@@ -8,7 +8,7 @@ import {
 
 const usersRouter = Router(),
       upload = multer({
-          dest: './uploads'
+          dest: __dirname + '/uploads'
       });
 
 usersRouter.route('/')
