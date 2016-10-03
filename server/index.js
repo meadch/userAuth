@@ -7,7 +7,8 @@ import passport from 'passport';
 import flash from 'connect-flash';
 import logger from 'morgan';
 // Initializes mongo connection
-import './config/db'
+import './config/db';
+
 // Pulls in routers
 import {
   mainRouter,

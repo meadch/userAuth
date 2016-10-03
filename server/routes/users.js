@@ -6,9 +6,12 @@ import {
   UserController
 } from '../controllers';
 
+// Pull from settings at root level for file uploads
+const settings = require('../../settings');
+
 const usersRouter = Router(),
       upload = multer({
-          dest: __dirname + '/uploads'
+          dest: settings.PROJECT_DIR + '/uploads'
       });
 
 usersRouter.route('/')
