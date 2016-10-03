@@ -47,6 +47,7 @@ export default (function() {
 
         if (!req.validationErrors()) {
             req.check('email', 'Email Taken').isEmailAvailable();
+            req.check('username', 'Username Taken').isUsernameAvailable();
         }
 
         req.asyncValidationErrors()

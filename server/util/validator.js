@@ -41,7 +41,27 @@ module.exports = function(app){
             }
           });
         });
+      },
+      isUsernameAvailable: function(username) {
+        return new Promise(function(resolve, reject) {
+          User.findOne({ username })
+          .then(function(user) {
+            if (!user) {
+              resolve(user);
+            }
+            else {
+              console.log(`Found user: ${user}`);
+              reject(user);
+            }
+          })
+          .catch(function(error){
+            if (error) {
+              reject(error);
+            }
+          });
+        });
       }
+
     }
   }));
 }
