@@ -12,7 +12,7 @@ function ensureAuthenticated(req, res, next){
     return next();
   }
   req.flash('success', "Please login!");
-  res.redirect('/users/login');
+  res.redirect('/auth/users/login');
 }
 
 export default mainRouter;

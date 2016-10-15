@@ -3,7 +3,7 @@ extends layout
 block content
   h2.page-header Register
   p Please register below
-  form(method='post' action='/users/register', enctype='multipart/form-data')
+  form(method='post' action='/auth/users/register', enctype='multipart/form-data')
     .form-group
       label Name
       input.form-control(name='name', type='text', placeholder='Enter name')
