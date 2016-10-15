@@ -18,9 +18,9 @@ html(lang='en')
           ul.nav.navbar-nav
             if !user
               li(class=(title == 'Register' ? 'active' : ''))
-                a(href='/users/register') Register
+                a(href='/auth/users/register') Register
               li(class=(title == 'Login' ? 'active' : ''))
-                a(href='/users/login') Login
+                a(href='/auth/users/login') Login
           if user
             ul.nav.navbar-nav.navbar-right
              li

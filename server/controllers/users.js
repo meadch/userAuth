@@ -31,7 +31,7 @@ export default (function() {
                 User.create(newUser)
                 .then( (createdUser) => {
                   req.flash('success flash', "Successfully registered! Please login.");
-                  res.redirect('/');
+                  res.redirect('/auth');
                 })
             });
         });
@@ -58,13 +58,13 @@ export default (function() {
                 errors.forEach(({msg}) => {
                     req.flash('error flash', msg);
                 })
-                res.redirect('/users/register');
+                res.redirect('/auth/users/register');
             });
     }
 
     UserController.login = (req, res, done) => {
       if (req.isAuthenticated()) {
-        res.redirect('/')
+        res.redirect('/auth')
       } else {
         res.render('login', {
           title: "Login"
@@ -75,7 +75,7 @@ export default (function() {
     UserController.logout = (req, res) => {
       req.logout();
       req.flash('success', "You're logged out!");
-      res.redirect('/users/login');
+      res.redirect('/auth/users/login');
     }
 
     UserController.getUserByUsername = (username) => {

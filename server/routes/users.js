@@ -24,7 +24,7 @@ usersRouter.route('/register')
 usersRouter.route('/login')
   .get(UserController.login)
   .post(
-    passport.authenticate('local',{failureRedirect:'/users/login', failureFlash: 'Invalid username or password'}), UserController.login
+    passport.authenticate('local',{failureRedirect:'/auth/users/login', failureFlash: 'Invalid username or password'}), UserController.login
   )
 
 usersRouter.route('/logout')
